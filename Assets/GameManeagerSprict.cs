@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameManeagerSprict : MonoBehaviour
 {
+    public GameObject PlayerPrefab;
     int[,] map;
     // Start is called before the first frame update
     
