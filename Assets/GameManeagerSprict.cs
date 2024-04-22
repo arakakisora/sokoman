@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class GameManeagerSprict : MonoBehaviour
 {
-    public GameObject PlayerPrefab;
-    int[,] map;
+  
     // Start is called before the first frame update
     
     void PrintArray()
@@ -28,39 +27,55 @@ public class GameManeagerSprict : MonoBehaviour
 
     }
 
-    //int GetPlayerIndex()
-    //{
-    //    for(int i = 0; i < map.Length; i++)
-    //    {
-    //        if (map[i] == 1)
-    //        {
-    //            return i;
-    //        }
-    //    }
+    Vector2Int GetPlayerIndex()
+    {
+        for (int y = 0; y < field.Length; y++)
+        {
+            for (int x = 0; x < field.Length; x++)
+            {
+                if(field[y, x] == null)
+                {
 
-    //    return -1;
+                    continue;
 
-    //}
+                }
 
-    //bool MoveNumber(int number,int moveForm,int moveTo)
-    //{
-    //    if (moveTo < 0 || moveTo >= map.Length){return false;}
+                if (field[y,x].tag == "Player")
+                {
 
-    //    if (map[moveTo] == 2)
-    //    {
-    //        int velocity = moveTo - moveForm;
-    //        bool sucess = MoveNumber(2, moveTo, moveTo + velocity);
-    //        if (!sucess) {return false;} 
-    //    }
+                    return new Vector2Int(x, y);
 
-    //    map[moveTo] = number; 
-    //    map[moveForm] = 0;
-    //    return true;
-    //}
-    
+                }
+
+                     
+
+            }
+        }
+
+        return new Vector2Int(-1,-1);
+
+    }
+
+    bool MoveNumber(int number, Vector2Int moveForm, Vector2Int moveTo)
+    {
+        if (moveTo.x < 0 || moveTo.x >= field) { return false; }
+
+        if (map[moveTo] == 2)
+        {
+            int velocity = moveTo - moveForm;
+            bool sucess = MoveNumber(2, moveTo, moveTo + velocity);
+            if (!sucess) { return false; }
+        }
+
+        map[moveTo] = number;
+        map[moveForm] = 0;
+        return true;
+    }
+
     void Start()
     {
 
+        
       
         map = new int[,] {
 
@@ -69,7 +84,33 @@ public class GameManeagerSprict : MonoBehaviour
         {0,0,0,0,0,},
 
         };
+        field=new GameObject[map.GetLength(0),map.GetLength(1)];
+
+        for(int y = 0;y < map.GetLength(0); y++)
+        {
+            for(int x = 0;x < map.GetLength(1); x++)
+            {
+
+                if (map[y,x] == 1)
+                {
+                    field[y,x] = Instantiate(
+                        PlayerPrefab,
+                        new Vector3(x,y,0),
+                        Quaternion.identity
+
+                        ); 
+
+                }
+
+            }
+
+
+        }
+
         PrintArray();
+
+
+
     }
 
     // Update is called once per frame
@@ -86,7 +127,7 @@ public class GameManeagerSprict : MonoBehaviour
     //            PrintArray();
 
 
-           
+
     //    }
 
     //    if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -103,4 +144,10 @@ public class GameManeagerSprict : MonoBehaviour
     //    }
 
     //}
+
+
+    public GameObject PlayerPrefab;
+    int[,] map;
+    GameObject[,] field;
+    
 }
